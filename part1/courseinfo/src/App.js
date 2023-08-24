@@ -19,28 +19,25 @@ const Part = (props) => {
 }
 
 const Content = (props) => {
-  let p1 = props.course.parts[0]
-  let p2 = props.course.parts[1]
-  let p3 = props.course.parts[2]
+  const { parts } = props.course;
   return (
     <>
-      <Part part={p1.name} exercise={p1.exercises}/>
-      <Part part={p2.name} exercise={p2.exercises}/>
-      <Part part={p3.name} exercise={p3.exercises}/>
+      {parts.map(({ name, exercises }) => (
+        <Part key={name} part={name} exercise={exercises} />
+      ))}
     </>
-  )
-}
+  );
+};
+
 
 const Total = (props) => {
-  let p1 = props.course.parts[0]
-  let p2 = props.course.parts[1]
-  let p3 = props.course.parts[2]
+  const { parts } = props.course;
+  const totalExercises = parts.reduce((total, part) => total + part.exercises, 0);
   return (
-    <>
-      <p>Number of exercises {p1.exercises + p2.exercises + p3.exercises}</p>
-    </>
-  )
-}
+    <p>Number of exercises {totalExercises}</p>
+  );
+};
+
 const App = () => {
   const course = {
     name: 'Half Stack application development',
