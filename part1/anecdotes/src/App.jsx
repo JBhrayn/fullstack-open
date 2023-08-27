@@ -2,6 +2,9 @@ import { useState } from 'react'
 
 const Section = ({headerText, anecdote}) => {
   const {text, votes} = anecdote
+
+  if(headerText.includes('vote') && votes === 0) return (<><h1>No votes yet</h1></>)
+
   return (
     <>
       <h1>{headerText}</h1>
