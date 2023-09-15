@@ -8,9 +8,17 @@ const PersonForm = ({persons, setPersons}) => {
   
     const addPerson = (event) => {
       event.preventDefault()
-      const nameExists = persons.some(p => p.name === newName)
-      if (nameExists) {
-        alert(`${newName} is already added to phonebook`)
+      const person = persons.find(p => p.name === newName)
+      if (person) {
+        if (confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+          const updatedContact = {...person, number:newNumber}
+          dbServices
+            .update(person.id, updatedContact)
+            .then(returnedObject => {
+              setPersons(persons.map(p => p.name !== person.name ? p : returnedObject))
+            })
+          alert(`${newName}'s number successfully updated`)
+        }
       }
       else {
         const newPerson = {
