@@ -2,19 +2,31 @@ import { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
-import dbService from './services/phonebook'
+import dbServices from './services/phonebook'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [filter, setFilter] = useState('')
 
   useEffect(() => {
-    dbService
+    dbServices
       .getAll()
       .then(initialRecords => {
         setPersons(initialRecords)
       })
   },[])
+
+  const removeContact = id => {
+    const name = persons.find(p => p.id === id).name
+    if(confirm(`Delete ${name}?`)) {
+      dbServices
+        .remove(id)
+        .then(returnedObject => {
+            setPersons(persons.filter(p => p.id !== id))
+      })
+      alert(`${name} deleted.`)
+    }
+  }
 
   const filteredContacts = persons.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()))
 
@@ -25,7 +37,7 @@ const App = () => {
       <h2>add a new</h2>
       <PersonForm persons={persons} setPersons={setPersons}/>
       <h2>Numbers</h2>
-      <Persons contacts={filteredContacts}/> 
+      <Persons contacts={filteredContacts} removeContact={removeContact}/> 
     </div>
   )
 }

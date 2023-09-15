@@ -1,6 +1,7 @@
 import axios from 'axios'
 const baseUrl = "http://localhost:3001/persons"
 
+const concat = (url, id) => `${url}/${id}`
 const dataFrom = (request) => request.then(response => response.data)
 
 const getAll = () => {
@@ -12,7 +13,11 @@ const create = newObject => {
 }
 
 const update = (id, newObject) => {
-    return dataFrom(axios.put(`${baseUrl}/${id}`, newObject))
+    return dataFrom(axios.put(concat(baseUrl, id), newObject))
 }
 
-export default {getAll, create, update}
+const remove = (id) => {
+    return dataFrom(axios.delete(concat(baseUrl, id)))
+}
+
+export default {getAll, create, update, remove}
