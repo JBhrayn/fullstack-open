@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import dbServices from '../services/phonebook'
-
+import Notification from '../components/Notification'
 
 const PersonForm = ({persons, setPersons}) => {
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
+    const [successMessage, setSuccessMessage] = useState(null)
+
   
     const addPerson = (event) => {
       event.preventDefault()
@@ -30,26 +32,33 @@ const PersonForm = ({persons, setPersons}) => {
           .then(returnedObject => {
             setPersons(persons.concat(returnedObject))
           } )
+        setSuccessMessage(`Added ${newPerson.name}`)
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 3000)
       }
       setNewName('')
       setNewNumber('')
     }
   
     return (
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input 
-                    value={newName} 
-                    onChange={e => setNewName(e.target.value)}/>
-          <br/>
-          number: <input 
-                    value={newNumber}
-                    onChange={e => setNewNumber(e.target.value)}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <div>
+        <Notification message={successMessage} />
+        <form onSubmit={addPerson}>
+          <div>
+            name: <input 
+                      value={newName} 
+                      onChange={e => setNewName(e.target.value)}/>
+            <br/>
+            number: <input 
+                      value={newNumber}
+                      onChange={e => setNewNumber(e.target.value)}/>
+          </div>
+          <div>
+            <button type="submit">add</button>
+          </div>
+        </form>
+      </div>
     )  
 }
 
