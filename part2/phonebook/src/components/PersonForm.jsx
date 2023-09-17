@@ -5,7 +5,7 @@ import Notification from '../components/Notification'
 const PersonForm = ({persons, setPersons}) => {
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
-    const [successMessage, setSuccessMessage] = useState(null)
+    const [notificationMessage, setNotificationMessage] = useState('hidden')
 
   
     const addPerson = (event) => {
@@ -18,8 +18,15 @@ const PersonForm = ({persons, setPersons}) => {
             .update(person.id, updatedContact)
             .then(returnedObject => {
               setPersons(persons.map(p => p.name !== person.name ? p : returnedObject))
+              setNotificationMessage(`${newName}'s number successfully updated`)
             })
-          alert(`${newName}'s number successfully updated`)
+            .catch(() => {
+              setNotificationMessage(`Information of ${newName} has already been removed from server`)
+              setPersons(persons.filter(p => p.name !== newName))
+            })
+            setTimeout(() => {
+              setNotificationMessage('hidden')
+            }, 3000)
         }
       }
       else {
@@ -32,10 +39,10 @@ const PersonForm = ({persons, setPersons}) => {
           .then(returnedObject => {
             setPersons(persons.concat(returnedObject))
           } )
-        setSuccessMessage(`Added ${newPerson.name}`)
+          setNotificationMessage(`Added ${newPerson.name}`)
         setTimeout(() => {
-          setSuccessMessage(null)
-        }, 3000)
+          setNotificationMessage('hidden')
+        }, 2000)
       }
       setNewName('')
       setNewNumber('')
@@ -43,7 +50,7 @@ const PersonForm = ({persons, setPersons}) => {
   
     return (
       <div>
-        <Notification message={successMessage} />
+        <Notification message={notificationMessage} />
         <form onSubmit={addPerson}>
           <div>
             name: <input 

@@ -1,10 +1,14 @@
 const Notification = ({ message }) => {
-    if (message === null) {
+    if (message === 'hidden') {
       return null
+    }
+    let color = 'green'
+    if (message.includes('removed')){
+      color = 'red'
     }
 
     const notificationStyle = {
-        color: 'green',
+        color: color,
         background: 'lightgrey',
         fontSize: 20,
         borderStyle: 'solid',
